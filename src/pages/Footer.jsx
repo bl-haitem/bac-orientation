@@ -13,7 +13,7 @@ export default function Footer() {
         {/* الروابط */}
         <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 items-center text-sm">
           <a
-            href="https://www.instagram.com/your_username" // Replace with actual Instagram link
+            href="https://www.instagram.com/bl._.haitem/" // Replace with actual Instagram link
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-700 dark:text-gray-300 hover:text-pink-600 dark:hover:text-pink-400 flex items-center gap-2 transition-colors duration-300"
@@ -22,7 +22,7 @@ export default function Footer() {
           </a>
 
           <a
-            href="mailto:your_email@example.com" // Replace with actual email
+            href="haitembelaib@gmail.com" // Replace with actual email
             className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-2 transition-colors duration-300"
           >
             <Mail size={20} /> Email
