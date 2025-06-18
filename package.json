@@ -19,6 +19,7 @@
     "@tsparticles/basic": "^3.8.1",
     "@tsparticles/engine": "^3.8.1",
     "@tsparticles/react": "^3.0.0",
+    "@vercel/analytics": "^1.5.0",
     "axios": "^1.10.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
