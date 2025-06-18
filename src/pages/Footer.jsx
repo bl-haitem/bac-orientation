@@ -22,7 +22,7 @@ export default function Footer() {
           </a>
 
           <a
-            href="haitembelaib@gmail.com" // Replace with actual email
+            href="mailto:haitembelaib@gmail.com" // Replace with actual email
             className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-2 transition-colors duration-300"
           >
             <Mail size={20} /> Email
