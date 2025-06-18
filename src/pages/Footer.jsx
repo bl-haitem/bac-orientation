@@ -7,7 +7,7 @@ export default function Footer() {
         
         {/* اسم المنصة */}
         <div className="text-2xl font-extrabold text-teal-700 dark:text-teal-300">
-          📘 وجهني
+           وجهني
         </div>
 
         {/* الروابط */}
