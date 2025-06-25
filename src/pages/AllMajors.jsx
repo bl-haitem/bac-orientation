@@ -111,10 +111,10 @@ const AllMajors = () => {
 
   const [selectedCard, setSelectedCard] = useState(null);
 
-  const toggleCard = useCallback((index) => {
-    const globalIndex = (currentPage - 1) * itemsPerPage + index;
-    setSelectedCard(prev => (prev === globalIndex ? null : globalIndex));
-  }, [currentPage, itemsPerPage]);
+  // التعديل الرئيسي هنا: استقبل الفهرس العالمي مباشرةً
+  const toggleCard = useCallback((globalIndexToToggle) => {
+    setSelectedCard(prev => (prev === globalIndexToToggle ? null : globalIndexToToggle));
+  }, []); // لا توجد حاجة لـ currentPage أو itemsPerPage هنا بعد الآن
 
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
 
@@ -324,4 +324,5 @@ const AllMajors = () => {
   );
 };
 
-export default AllMajors;
+export default 
+AllMajors;
