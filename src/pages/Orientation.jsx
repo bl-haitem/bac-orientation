@@ -236,9 +236,15 @@ const Step3Content = ({ orientationQuestions, formData, updateAnswer, calculateR
   );
 };
 
-// ** مكون Step4Content **
+// ** مكون Step4Content ** (مُعدل حسب طلبك)
 const Step4Content = ({ result, goToHomePage, errors }) => {
+  const [openMajorCard, setOpenMajorCard] = useState(null);
   const [openUniversityCard, setOpenUniversityCard] = useState(null);
+
+  const toggleMajor = useCallback((index) => {
+    setOpenUniversityCard(null); // إغلاق أي جامعة مفتوحة عند تغيير التخصص
+    setOpenMajorCard(prev => (prev === index ? null : index));
+  }, []);
 
   const toggleUniversityDescription = useCallback((majorIndex, uniIndex) => {
     const uniqueKey = `${majorIndex}-${uniIndex}`;
@@ -265,57 +271,68 @@ const Step4Content = ({ result, goToHomePage, errors }) => {
         </div>
       ) : (
         <div className="space-y-8">
-          {result.map((majorGroup, majorIndex) => (
-            <div key={majorIndex} className="border border-gray-200/50 dark:border-gray-700/50 rounded-2xl p-6 shadow-xl bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm">
-              <h3 className="text-2xl font-semibold text-teal-600 dark:text-teal-400 mb-3 flex items-center">
-                <GraduationCap className="w-6 h-6 mr-2" />
-                {majorGroup.major}
-              </h3>
-              <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">
-                <span className="font-medium">نسبة التطابق:</span> {majorGroup.score}%
-              </p>
+          {result.map((majorGroup, majorIndex) => {
+            const isMajorOpen = openMajorCard === majorIndex;
+            return (
+              <div
+                key={majorIndex}
+                className="border border-gray-200/50 dark:border-gray-700/50 rounded-2xl p-6 shadow-xl bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm cursor-pointer hover:bg-white/80 dark:hover:bg-gray-800 transition-colors"
+                onClick={() => toggleMajor(majorIndex)}
+              >
+                <h3 className="text-2xl font-semibold text-teal-600 dark:text-teal-400 mb-3 flex items-center justify-between">
+                  <span className="flex items-center">
+                    <GraduationCap className="w-6 h-6 mr-2" />
+                    {majorGroup.major}
+                  </span>
+                  {isMajorOpen ? <ChevronUp /> : <ChevronDown />}
+                </h3>
+                <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">
+                  <span className="font-medium">نسبة التطابق:</span> {majorGroup.score}%
+                </p>
 
-              {majorGroup.universities && majorGroup.universities.length > 0 && (
-                <div className="mt-4 border-t border-gray-200/50 dark:border-gray-700/50 pt-4">
-                  <h4 className="text-xl font-medium text-gray-900 dark:text-white mb-3 flex items-center">
-                    <School className="w-5 h-5 mr-2" />
-                    الجامعات المتاحة لهذا التخصص:
-                  </h4>
-                  <ul className="space-y-3">
-                    {majorGroup.universities.map((uni, uniIndex) => {
-                      const uniqueUniKey = `${majorIndex}-${uniIndex}`;
-                      const isOpen = openUniversityCard === uniqueUniKey;
-                      return (
-                        <li
-                          key={uniqueUniKey}
-                          className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm p-4 rounded-md border border-gray-100/50 dark:border-gray-750/50 shadow-sm cursor-pointer hover:bg-white/90 dark:hover:bg-gray-700/90 transition-colors duration-200"
-                          onClick={() => toggleUniversityDescription(majorIndex, uniIndex)}
-                        >
-                          <div className="flex justify-between items-center">
-                            <div>
-                              <p className="font-semibold text-gray-800 dark:text-gray-200">{uni.university} ({uni.state})</p>
-                              {/* ** تم إزالة هذا السطر ** */}
-                              {/* <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">المعدل الأدنى: {uni.minAverage}</p> */}
+                {isMajorOpen && majorGroup.universities && majorGroup.universities.length > 0 && (
+                  <div className="mt-4 border-t border-gray-200/50 dark:border-gray-700/50 pt-4">
+                    <h4 className="text-xl font-medium text-gray-900 dark:text-white mb-3 flex items-center">
+                      <School className="w-5 h-5 mr-2" />
+                      الجامعات المتاحة لهذا التخصص:
+                    </h4>
+                    <ul className="space-y-3">
+                      {majorGroup.universities.map((uni, uniIndex) => {
+                        const uniqueUniKey = `${majorIndex}-${uniIndex}`;
+                        const isOpen = openUniversityCard === uniqueUniKey;
+                        return (
+                          <li
+                            key={uniqueUniKey}
+                            className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm p-4 rounded-md border border-gray-100/50 dark:border-gray-750/50 shadow-sm cursor-pointer hover:bg-white/90 dark:hover:bg-gray-700/90 transition-colors duration-200"
+                            onClick={(e) => {
+                              e.stopPropagation(); // منع فتح التخصص عند الضغط على الجامعة
+                              toggleUniversityDescription(majorIndex, uniIndex);
+                            }}
+                          >
+                            <div className="flex justify-between items-center">
+                              <p className="font-semibold text-gray-800 dark:text-gray-200">
+                                {uni.university} ({uni.state})
+                              </p>
+                              {isOpen ? (
+                                <ChevronUp className="w-5 h-5 text-teal-600 dark:text-teal-400" />
+                              ) : (
+                                <ChevronDown className="w-5 h-5 text-teal-600 dark:text-teal-400" />
+                              )}
                             </div>
-                            {isOpen ? (
-                              <ChevronUp className="w-5 h-5 text-teal-600 dark:text-teal-400" />
-                            ) : (
-                              <ChevronDown className="w-5 h-5 text-teal-600 dark:text-teal-400" />
+                            {isOpen && uni.description && (
+                              <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300 mt-2 transition-all duration-300 ease-in-out animate-fade-in">
+                                <strong className="text-teal-600 dark:text-teal-400">الوصف:</strong> {uni.description}
+                              </p>
                             )}
-                          </div>
-                          {isOpen && uni.description && (
-                            <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300 mt-2 transition-all duration-300 ease-in-out animate-fade-in">
-                              <strong className="text-teal-600 dark:text-teal-400">الوصف:</strong> {uni.description}
-                            </p>
-                          )}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              )}
-            </div>
-          ))}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
 
@@ -328,6 +345,7 @@ const Step4Content = ({ result, goToHomePage, errors }) => {
     </div>
   );
 };
+
 
 
 const Orientation = () => {
@@ -409,13 +427,13 @@ const Orientation = () => {
     ],
     "آداب وفلسفة": [
       "اللغة العربية وآدابها", "الفلسفة", "التاريخ والجغرافيا", "اللغة الفرنسية",
-      "اللغة الإنجليزية", "الرياضيات", "العلوم الطبيعية", "الفيزياء",
+      "اللغة الإنجليزية", "الرياضيات",
       "التربية الإسلامية", "التربية البدنية"
     ],
     "لغات أجنبية": [
       "اللغة العربية", "اللغة الفرنسية", "اللغة الإنجليزية", "لغة أجنبية ثالثة",
-      "الفلسفة", "التاريخ والجغرافيا", "الرياضيات", "العلوم الطبيعية",
-      "الفيزياء", "التربية الإسلامية", "التربية البدنية"
+      "الفلسفة", "التاريخ والجغرافيا", "الرياضيات",
+       "التربية الإسلامية", "التربية البدنية"
     ]
   }), []);
 
