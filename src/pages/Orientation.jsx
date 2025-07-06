@@ -673,7 +673,8 @@ const Orientation = () => {
       const majorScores = [];
       majorsData.forEach(majorItem => {
         const majorNameFromSheet = majorItem.c[0]?.v;
-        const allowedBranchesString = majorItem.c[1]?.v;
+        let allowedBranchesString = majorItem.c[1]?.v || '';
+        allowedBranchesString = allowedBranchesString.replace(/\bعلوم\b/g, 'علوم تجريبية');
         const majorMinAverage = parseFloat(majorItem.c[2]?.v);
         const majorState = majorItem.c[3]?.v || "غير محدد";
         const universityName = majorItem.c[4]?.v || "غير محدد";
